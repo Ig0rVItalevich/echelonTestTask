@@ -1,0 +1,5 @@
+port: "8000"
+api_key: "AIzaSyDAkrHHIraHmENIbY6JazGBiCuaKV3eLfk"
+redis:
+  host: "localhost"
+  port: "6379"

@@ -1,0 +1,17 @@
+syntax="proto3";
+
+package api;
+
+option go_package="github.com/Ig0rVItalevich/echelon/pkg/api/proto;api";
+
+service Thumbnails {
+  rpc Get(GetRequest) returns (GetResponse);
+}
+
+message GetRequest {
+  string link = 1;
+}
+
+message GetResponse {
+  string thumbnail = 1;
+}

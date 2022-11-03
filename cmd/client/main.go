@@ -17,7 +17,7 @@ func main() {
 	}
 
 	flag.Parse()
-	if flag.NArg() != 1 {
+	if flag.NArg() < 1 {
 		logrus.Fatal("not enough arguments")
 	}
 

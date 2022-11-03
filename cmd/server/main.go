@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	api "github.com/Ig0rVItalevich/echelon/pkg/api/proto"
+	"github.com/Ig0rVItalevich/echelon/pkg/cache"
 	"github.com/Ig0rVItalevich/echelon/pkg/server"
+	"github.com/go-redis/redis"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"google.golang.org/api/option"
@@ -22,8 +24,15 @@ func main() {
 		logrus.Fatalf("error creating youtubeService: %s", err.Error())
 	}
 
+	redisClient := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.host"), viper.GetString("redis.port")),
+		Password: "",
+		DB:       0,
+	})
+	cacheServer := cache.NewCache(redisClient)
+
 	s := grpc.NewServer()
-	srv := server.NewServer(youtubeService)
+	srv := server.NewServer(youtubeService, cacheServer)
 	api.RegisterThumbnailsServer(s, srv)
 
 	address := fmt.Sprintf("%s:%s", viper.GetString("host"), viper.GetString("port"))

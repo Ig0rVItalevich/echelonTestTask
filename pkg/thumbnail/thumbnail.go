@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-func ThumbnailHandler(thumbnail *youtube.ThumbnailDetails, videoLink string) (string, error) {
+func ThumbnailHandler(thumbnail *youtube.ThumbnailDetails) ([]byte, error) {
 	var thumbnailLink string
 	if thumbnail.High != nil {
 		thumbnailLink = thumbnail.High.Url
@@ -22,25 +22,28 @@ func ThumbnailHandler(thumbnail *youtube.ThumbnailDetails, videoLink string) (st
 	} else if thumbnail.Default != nil {
 		thumbnailLink = thumbnail.Default.Url
 	} else {
-		thumbnailLink = ""
-		return thumbnailLink, errors.New("video does not have thumbnail")
+		return nil, errors.New("video does not have thumbnail")
 	}
 
-	return downloadThumbnail(thumbnailLink, videoLink)
+	return downloadThumbnail(thumbnailLink)
 }
 
-func downloadThumbnail(thumbnailLink string, videoLink string) (string, error) {
+func downloadThumbnail(thumbnailLink string) ([]byte, error) {
 	res, err := http.Get(thumbnailLink)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
 
+	return body, nil
+}
+
+func SaveThumbnail(thumbnail []byte, videoLink string) (string, error) {
 	if err := checkImageDir(); err != nil {
 		return "", err
 	}
@@ -50,7 +53,7 @@ func downloadThumbnail(thumbnailLink string, videoLink string) (string, error) {
 		return "", err
 	}
 	defer file.Close()
-	file.Write(body)
+	file.Write(thumbnail)
 
 	return pathFile, nil
 }

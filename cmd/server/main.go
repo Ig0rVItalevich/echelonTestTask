@@ -13,6 +13,9 @@ import (
 	"google.golang.org/api/youtube/v3"
 	"google.golang.org/grpc"
 	"net"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
@@ -41,8 +44,19 @@ func main() {
 		logrus.Fatalf("error creating listener: %s", err.Error())
 	}
 
-	if err := s.Serve(lis); err != nil {
-		logrus.Fatalf("server listener service error: %s", err.Error())
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			logrus.Fatalf("server listener service error: %s", err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	s.Stop()
+	if err := srv.Cache.DB.Close(); err != nil {
+		logrus.Fatalf("error occured while closing cache db: %s", err.Error())
 	}
 }
 

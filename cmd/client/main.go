@@ -23,26 +23,35 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("error while dial server: %s", err.Error())
 	}
+	defer conn.Close()
 
 	client := api.NewThumbnailsClient(conn)
 
 	asyncFlag := flag.Bool("async", false, "implements asynchronous execution")
 	flag.Parse()
 
-	if *asyncFlag {
-		var wg sync.WaitGroup
-		args := os.Args[2:]
-		for _, arg := range args {
+	argsHandler(os.Args, *asyncFlag, client)
+}
+
+func argsHandler(args []string, async bool, client api.ThumbnailsClient) {
+	if async {
+		args = args[2:]
+	} else {
+		args = args[1:]
+	}
+
+	var wg sync.WaitGroup
+	for _, arg := range args {
+		if async {
 			wg.Add(1)
 			go requestServer(arg, client, &wg)
-		}
-
-		wg.Wait()
-	} else {
-		args := os.Args[1:]
-		for _, arg := range args {
+		} else {
 			requestServer(arg, client, nil)
 		}
+	}
+
+	if async {
+		wg.Wait()
 	}
 }
 
@@ -78,5 +87,3 @@ func InitConfig() error {
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()
 }
-
-//go run cmd/client/main.go --async "https://www.youtube.com/watch?v=qu3Vpdnndi4&ab_channel=Rozetked" "https://www.youtube.com/watch?v=2maIPAWo-UM&ab_channel=Rozetked" "https://www.youtube.com/watch?v=KnINsmXT9_c&ab_channel=Droider"

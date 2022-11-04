@@ -27,12 +27,11 @@ func main() {
 		logrus.Fatalf("error creating youtubeService: %s", err.Error())
 	}
 
-	redisClient := redis.NewClient(&redis.Options{
+	cacheServer := cache.NewCache(redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.host"), viper.GetString("redis.port")),
 		Password: "",
 		DB:       0,
-	})
-	cacheServer := cache.NewCache(redisClient)
+	}))
 
 	s := grpc.NewServer()
 	srv := server.NewServer(youtubeService, cacheServer)
@@ -56,7 +55,7 @@ func main() {
 
 	s.Stop()
 	if err := srv.Cache.DB.Close(); err != nil {
-		logrus.Fatalf("error occured while closing cache db: %s", err.Error())
+		logrus.Fatalf("error occured while closing cache db client: %s", err.Error())
 	}
 }
 

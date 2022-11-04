@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./
+    command: ./echelon-test
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    volumes:
+      - ./images:/go/images
+
+  db:
+    restart: always
+    image: redis:6.2.1-alpine3.13
+    ports:
+      - 6379:6379

@@ -1,5 +1,5 @@
 port: "8000"
 api_key: "AIzaSyDAkrHHIraHmENIbY6JazGBiCuaKV3eLfk"
 redis:
-  host: "localhost"
+  host: "db"
   port: "6379"

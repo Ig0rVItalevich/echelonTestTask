@@ -27,15 +27,15 @@
 
 - Получение одного thumbnail
 
-    docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic"
+```docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic"```
 
 - Получение нескольких thumbnail'ов
 
-    docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K"
+```docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K"```
 
 - Получение нескольких thumbnail'ов асинхронно
 
-    docker exec -it echelon_server_1 ./client --async  "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K" "https://www.youtube.com/watch?v=UV0mhY2Dxr0&ab_channel=RelaxationFilm"
+```docker exec -it echelon_server_1 ./client --async  "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K" "https://www.youtube.com/watch?v=UV0mhY2Dxr0&ab_channel=RelaxationFilm"```
 
 
 

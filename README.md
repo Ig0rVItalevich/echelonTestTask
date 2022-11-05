@@ -14,9 +14,9 @@
 
 1. Склонировать репозиторий с помощью команды **git clone https://github.com/Ig0rVItalevich/echelonTestTask.git**
 2. Перейти в каталог проекта с помощью команды **cd ./echelonTestTask**
-3. Вставить свой Google API key в параметр **api_key** config-файла *configs/config.yml* (Руководство по созданию https://cloud.google.com/docs/authentication/api-keys)
+3. Вставить свой Google API key в параметр **api_key** config-файла *configs/config.yml* (Руководство по созданию https://cloud.google.com/docs/authentication/api-keys). При создании ключа необходимо указать API restrictions, как YouTube Data API v3.
 4. Находясь в рабочей дирректории проекта, запустить приложение командой **docker-compose up** 
-5. Вызвать команду **docker ps | grep echelon_server** для просмотра имени запустившегося контейнера
+5. Вызвать команду **docker ps | grep echelontesttask_server** для просмотра имени запустившегося контейнера
 
 ### Запуск клиента
 
@@ -26,15 +26,15 @@
 
 - Получение одного thumbnail
 
-```docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic"```
+```docker exec -it echelontesttask_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic"```
 
 - Получение нескольких thumbnail'ов
 
-```docker exec -it echelon_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K"```
+```docker exec -it echelontesttask_server_1 ./client "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K"```
 
 - Получение нескольких thumbnail'ов асинхронно
 
-```docker exec -it echelon_server_1 ./client --async  "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K" "https://www.youtube.com/watch?v=UV0mhY2Dxr0&ab_channel=RelaxationFilm"```
+```docker exec -it echelontesttask_server_1 ./client --async  "https://www.youtube.com/watch?v=UC4T6t2s5vA&ab_channel=NatureRelaxationMusic" "https://www.youtube.com/watch?v=RK1K2bCg4J8&t=132s&ab_channel=Balu-RelaxingNaturein4K" "https://www.youtube.com/watch?v=UV0mhY2Dxr0&ab_channel=RelaxationFilm"```
 
 
 

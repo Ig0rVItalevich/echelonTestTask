@@ -9,7 +9,7 @@ service Thumbnails {
 }
 
 message GetRequest {
-  string link = 1;
+  string videoId = 1;
 }
 
 message GetResponse {

@@ -14,15 +14,13 @@ type Server struct {
 	Cache          *cache.Cache
 }
 
-func NewServer(youtubeService *youtube.Service, cache *cache.Cache) *Server {
-	return &Server{YoutubeService: youtubeService, Cache: cache}
-}
+var _ api.ThumbnailsServer = (*Server)(nil)
 
 func (s *Server) Get(ctx context.Context, request *api.GetRequest) (*api.GetResponse, error) {
-	thumbnailBytes, err := s.Cache.GetThumbnail(request.GetLink())
+	thumbnailBytes, err := s.Cache.GetThumbnail(request.GetVideoId())
 	if err != nil {
 		part := []string{"snippet"}
-		videoInfo, err := s.YoutubeService.Videos.List(part).Fields("items/snippet/thumbnails").Id(request.GetLink()).Do()
+		videoInfo, err := s.YoutubeService.Videos.List(part).Fields("items/snippet/thumbnails").Id(request.GetVideoId()).Do()
 		if err != nil {
 			return nil, err
 		}
@@ -33,16 +31,20 @@ func (s *Server) Get(ctx context.Context, request *api.GetRequest) (*api.GetResp
 			return nil, err
 		}
 
-		if err := s.Cache.SetThumbnail(request.GetLink(), thumbnailBytes); err != nil {
+		if err := s.Cache.SetThumbnail(request.GetVideoId(), thumbnailBytes); err != nil {
 			return nil, err
 		}
 	}
 
-	thumbnailPath, err := thumbnail.SaveThumbnail(thumbnailBytes, request.GetLink())
+	thumbnailPath, err := thumbnail.SaveThumbnail(thumbnailBytes, request.GetVideoId())
 	if err != nil {
 		return nil, err
 	}
 	response := api.GetResponse{Thumbnail: thumbnailPath}
 
 	return &response, nil
+}
+
+func NewServer(youtubeService *youtube.Service, cache *cache.Cache) *Server {
+	return &Server{YoutubeService: youtubeService, Cache: cache}
 }

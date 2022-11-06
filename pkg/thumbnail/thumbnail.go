@@ -43,11 +43,11 @@ func downloadThumbnail(thumbnailLink string) ([]byte, error) {
 	return body, nil
 }
 
-func SaveThumbnail(thumbnail []byte, videoLink string) (string, error) {
+func SaveThumbnail(thumbnail []byte, videoId string) (string, error) {
 	if err := checkImageDir(); err != nil {
 		return "", err
 	}
-	pathFile := fmt.Sprintf("./images/%s.jpg", videoLink)
+	pathFile := fmt.Sprintf("./images/%s.jpg", videoId)
 	file, err := os.Create(pathFile)
 	if err != nil {
 		return "", err

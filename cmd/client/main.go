@@ -23,7 +23,12 @@ func main() {
 	if err != nil {
 		logrus.Fatalf("error while dial server: %s", err.Error())
 	}
-	defer conn.Close()
+	defer func() {
+		err := conn.Close()
+		if err != nil {
+			logrus.Fatalf("error while connection closing: %s", err.Error())
+		}
+	}()
 
 	client := api.NewThumbnailsClient(conn)
 
@@ -59,8 +64,8 @@ func requestServer(videoUrl string, client api.ThumbnailsClient, wg *sync.WaitGr
 	if wg != nil {
 		defer wg.Done()
 	}
-	link := getLink(videoUrl)
-	response, err := client.Get(context.Background(), &api.GetRequest{Link: link})
+	videoId := getVideoId(videoUrl)
+	response, err := client.Get(context.Background(), &api.GetRequest{VideoId: videoId})
 	if err != nil {
 		logrus.Fatalf("error while requesting gRPC-server: %s", err.Error())
 	}
@@ -68,7 +73,7 @@ func requestServer(videoUrl string, client api.ThumbnailsClient, wg *sync.WaitGr
 	fmt.Printf("Thumbnail-file of video %s: %s\n", videoUrl, response.Thumbnail)
 }
 
-func getLink(videoUrl string) string {
+func getVideoId(videoUrl string) string {
 	urlParse, err := url.Parse(videoUrl)
 	if err != nil {
 		logrus.Fatalf("error while parsing url: %s", err.Error())
@@ -77,9 +82,9 @@ func getLink(videoUrl string) string {
 	if err != nil {
 		logrus.Fatalf("error while parsing url params: %s", err.Error())
 	}
-	link := urlParams.Get("v")
+	videoId := urlParams.Get("v")
 
-	return link
+	return videoId
 }
 
 func InitConfig() error {
